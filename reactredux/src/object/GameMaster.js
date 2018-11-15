@@ -8,18 +8,58 @@ export default class GameMaster {
     this.boardMaster = new BoardMaster([this.mapSize, this.mapSize]);
     this.add();
     this.add();
-    console.log(this.boardMaster._map.stringify());
+
+    document.addEventListener('keydown',(e)=> {
+      switch(e.keyCode){
+        case 37:
+          this.doWhenPushKeyLeft();
+          break;
+        case 38:
+          this.doWhenPushKeyTop();
+          break;
+        case 39:
+          this.doWhenPushKeyRight();
+          break;
+        case 40:
+          this.doWhenPushKeyBottom();
+          break;
+      }
+    });
   }
 
-  add() {
-    var position = {
+  getRandamPosition() {
+    return {
       x:Math.floor( Math.random() * this.mapSize ),
       y:Math.floor( Math.random() * this.mapSize )
     };
+  }
+
+  add() {
+    var position = this.getRandamPosition();
     if(this.boardMaster.isAlreadyExist([[1]], position)) {
-      return console.warn('is already exist!');
+      console.warn('is already exist!');
       this.add();
+      return;
     }
     this.boardMaster.add([[1]], position);
+    console.log(this.boardMaster._map.stringify());
   }
+
+  doWhenPushKeyLeft() {
+    this.boardMaster.mergeLeft();
+    this.add();
+  }
+
+  doWhenPushKeyTop() {
+    this.add();
+  }
+
+  doWhenPushKeyRight() {
+    this.add();
+  }
+
+  doWhenPushKeyBottom() {
+    this.add();
+  }
+
 }

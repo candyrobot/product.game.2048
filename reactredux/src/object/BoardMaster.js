@@ -15,6 +15,30 @@ export default class BoardMaster {
     this._map = this._map.transpose();
   }
 
+  mergeLeft() {
+    this._map = this._map.map((a, y)=> {
+      return a.map((v, x)=> {
+        return this.yyyyy(a, x);
+      });
+    });
+  }
+
+  yyyyy(a, i) {
+    for(var j=i+1; j<a.length; j++) {
+      if(a[i]===0 && a[j]!==0) {
+        var v=a[j];
+        a[j]=0;
+        return v;
+      }
+      if(a[i]>=0 && a[i]===a[j]) {
+        var v=a[i]+a[j];
+        a[j]=0;
+        return v;
+      }
+    }
+    return a[i];
+  }
+
   /**
    * 加算する
    * @param {object}
