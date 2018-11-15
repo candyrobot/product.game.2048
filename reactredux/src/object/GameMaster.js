@@ -54,8 +54,26 @@ export default class GameMaster {
     console.log(this.boardMaster._map.stringify());
   }
 
+  mergeBy2048(v, i, a) {
+    console.log(a);
+    for(var j=i+1; j<a.length; j++) {
+      if(a[i]===0 && a[j]!==0) {
+        var v=a[j];
+        a[j]=0;
+        return v;
+      }
+      if(a[i]>0 && a[i]===a[j]) {
+        var v=a[i]+a[j];
+        a[j]=0;
+        return v;
+      }
+    }
+    return a[i];
+  }
+
   doWhenPushKeyLeft() {
-    this.boardMaster.mergeLeft();
+    var map = this.boardMaster.getMap().mapAll(this.mergeBy2048);
+    this.boardMaster.overrideMap(map);
     this.add();
   }
 

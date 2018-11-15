@@ -35,6 +35,11 @@ Array.prototype.transpose = function() {
   return this[0].map((_, c) => this.map(r => r[c]));
 }
 
+/**
+ * [stringify description]
+ * @param  {[type]} strName [description]
+ * @return {[type]}         [description]
+ */
 Array.prototype.stringify = function(strName) {
   var str = '\n';
   this.map((arr)=> {
@@ -43,3 +48,15 @@ Array.prototype.stringify = function(strName) {
   return str;
 };
 
+/**
+ * [stringify description]
+ * @param  {[type]} strName [description]
+ * @return {[type]}         [description]
+ */
+Array.prototype.mapAll = function(fn) {
+  return this.map((a, y)=> {
+    return a.map((v, x)=> {
+      return fn(v, x, a);
+    });
+  });
+}
