@@ -5,6 +5,8 @@ export default class GameMaster {
 
   constructor(argument) {
     this.mapSize = 4;
+    this.iStopLoop = 2000;
+    this.iLoopCount = 0;
     this.boardMaster = new BoardMaster([this.mapSize, this.mapSize]);
     this.add();
     this.add();
@@ -35,11 +37,18 @@ export default class GameMaster {
   }
 
   add() {
+    if(this.iLoopCount >= this.iStopLoop) {
+      return;
+    }
+    if(this.boardMaster.getPutablePositions([[1]]).length === 0) {
+      console.log('game over');
+      return;
+    }
     var position = this.getRandamPosition();
     if(this.boardMaster.isAlreadyExist([[1]], position)) {
       console.warn('is already exist!');
+      this.iLoopCount++;
       this.add();
-      return;
     }
     this.boardMaster.add([[1]], position);
     console.log(this.boardMaster._map.stringify());

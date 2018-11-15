@@ -18,19 +18,19 @@ export default class BoardMaster {
   mergeLeft() {
     this._map = this._map.map((a, y)=> {
       return a.map((v, x)=> {
-        return this.yyyyy(a, x);
+        return this.mergeBy2048(a, x);
       });
     });
   }
 
-  yyyyy(a, i) {
+  mergeBy2048(a, i) {
     for(var j=i+1; j<a.length; j++) {
       if(a[i]===0 && a[j]!==0) {
         var v=a[j];
         a[j]=0;
         return v;
       }
-      if(a[i]>=0 && a[i]===a[j]) {
+      if(a[i]>0 && a[i]===a[j]) {
         var v=a[i]+a[j];
         a[j]=0;
         return v;
@@ -53,6 +53,34 @@ export default class BoardMaster {
     //   this._map[y][x]++;
     // });
     return this._map;
+  }
+
+  /**
+   * 配置可能な場所`position`を配列で返す
+   * @return {Array}
+   */
+  getPutablePositions(map) {
+    var positions = [];
+    this._map.forEach((a, y)=> {
+      a.forEach((v, x)=> {
+        !this.isOverBeyondMap(map, { x:x, y:y }) &&
+        !this.isAlreadyExist(map, { x:x, y:y }) &&
+        positions.push({ x:x, y:y });
+      });
+    });
+    return positions;
+  }
+
+  /**
+   * [isOverBeyondMap description]
+   * @param  {[type]} postion [description]
+   * @param  {[type]} map     [description]
+   * @return {[type]}         [description]
+   */
+  isOverBeyondMap(map, position) {
+    return this._map.length < position.y + map.length || this._map.some((a, i)=> {
+      return map[i-position.y] && a.length < position.x + map[i-position.y].length;
+    });
   }
 
   /**
