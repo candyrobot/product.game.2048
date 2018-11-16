@@ -8,57 +8,53 @@ export default class GameMaster {
     this.iStopLoop = 2000;
     this.iLoopCount = 0;
     this.boardMaster = new BoardMaster([this.mapSize, this.mapSize]);
-    this.add([[1]]);
-    this.add([[1]]);
-
     document.addEventListener('keydown',(e)=> {
       switch(e.keyCode){
         case 37:
-          this.doWhenPushKeyLeft();
+          this.doWhenLeft();
           break;
         case 38:
-          this.doWhenPushKeyTop();
+          this.doWhenTop();
           break;
         case 39:
-          this.doWhenPushKeyRight();
+          this.doWhenRight();
           break;
         case 40:
-          this.doWhenPushKeyBottom();
+          this.doWhenBottom();
           break;
       }
     });
-  }
 
-  getRandamPosition() {
-    return {
-      x:Math.floor( Math.random() * this.mapSize ),
-      y:Math.floor( Math.random() * this.mapSize )
-    };
+    this.add([[1]]);
+    this.add([[1]]);
   }
 
   add(map) {
-    if(this.iLoopCount >= this.iStopLoop) {
+    if(this.iLoopCount >= this.iStopLoop)
       return;
-    }
-    if(this.boardMaster.getPutablePositions(map).length === 0) {
+
+    var positions = this.boardMaster.getPositionsOnly(position=>
+      !this.boardMaster.isOverBeyondMap(map, position) && !this.boardMaster.isAlreadyExist(map, position)
+    );
+    this.boardMaster.add(map, positions[Math.floor( Math.random() * positions.length )]);
+    console.log(this.boardMaster._map.stringify());
+    if(this.isNoMore()) {
       console.log('game over');
       return;
     }
-    var position = this.getRandamPosition();
-    if(this.boardMaster.isAlreadyExist(map, position)) {
-      console.warn('is already exist!');
-      this.iLoopCount++;
-      this.add(map);
-      return;
-    }
-    this.boardMaster.add(map, position);
-    console.log(this.boardMaster._map.stringify());
+  }
+
+  isNoMore() {
+    this.iLoopCount++;
+    return this.doWhenLeft() === false &&
+    this.doWhenTop() === false &&
+    this.doWhenRight() === false &&
+    this.doWhenBottom() === false
   }
 
   mergeBy2048(_, i, a) {
-    if(this.iLoopCount >= this.iStopLoop) {
+    if(this.iLoopCount >= this.iStopLoop)
       return;
-    }
 
     for(var j=i+1; j<a.length; j++) {
       if(a[i]===0 && a[j]!==0) {
@@ -76,28 +72,35 @@ export default class GameMaster {
     return a[i];
   }
 
-  doWhenPushKeyLeft() {
+  doWhenLeft() {
     var map = this.boardMaster.getMap().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]]));
+    if(false)
+      return false;
     this.boardMaster.overrideMap(map);
     this.add([[1]]);
   }
 
-  doWhenPushKeyTop() {
+  doWhenTop() {
     var map = this.boardMaster.getMap().transpose().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).transpose();
+    if(false)
+      return false;
     this.boardMaster.overrideMap(map);
     this.add([[1]]);
   }
 
-  doWhenPushKeyRight() {
+  doWhenRight() {
     var map = this.boardMaster.getMap().turn().turn().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).turn().turn();
+    if(false)
+      return false;
     this.boardMaster.overrideMap(map);
     this.add([[1]]);
   }
 
-  doWhenPushKeyBottom() {
+  doWhenBottom() {
     var map = this.boardMaster.getMap().turn().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).turn().turn().turn();
+    if(false)
+      return false;
     this.boardMaster.overrideMap(map);
     this.add([[1]]);
   }
-
 }

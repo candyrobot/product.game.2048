@@ -27,41 +27,18 @@ export default class BoardMaster {
   }
 
   /**
-   * 配置可能な場所`position`を配列で返す
-   * @return {Array}
-   */
-  getPutablePositions(map) {
-    return this.getPositionsBy(()=> {
-      return !this.isOverBeyondMap(map, { x:x, y:y }) &&
-      !this.isAlreadyExist(map, { x:x, y:y });
-    });
-    // var positions = [];
-    // this._map.forEach((a, y)=> {
-    //   a.forEach((v, x)=> {
-    //     !this.isOverBeyondMap(map, { x:x, y:y }) &&
-    //     !this.isAlreadyExist(map, { x:x, y:y }) &&
-    //     positions.push({ x:x, y:y });
-    //   });
-    // });
-    // return positions;
-  }
-
-  /**
-   * 二次元専用
    * 条件(fn)にあった場所`position`を配列で返す
    * @return {Array}
    */
-  getPositionsBy(fn) {
+  getPositionsOnly(fn) {
     return this._map.map((a, y)=> {
       return a.map((v, x)=> {
-        return fn() ? [x,y] : undefined;
+        return fn({ x:x, y:y }) ? { x:x, y:y } : undefined;
       }).filter((v)=> v!==undefined);
     })
     // INFO: 2次元配列を1次元配列に
     .reduce((pre,current) => {pre.push(...current);return pre},[]);
   }
-
-
 
   /**
    * [isOverBeyondMap description]
