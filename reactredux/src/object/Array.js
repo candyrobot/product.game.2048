@@ -32,15 +32,14 @@ Array.prototype.merge = function(X, arr, fn = function(val1, val2) { return val2
  * @return {[type]}
  */
 Array.prototype.transpose = function() {
-  return this[0].map((_, c) => this.map(r => r[c]));
+  return this[0].map((_, i)=> this.map(a=> a[i]));
 }
 
 /**
- * [stringify description]
- * @param  {[type]} strName [description]
- * @return {[type]}         [description]
+ * 2次元配列専用
+ * @return {[type]}
  */
-Array.prototype.stringify = function(strName) {
+Array.prototype.stringify = function() {
   var str = '\n';
   this.map((arr)=> {
     str += JSON.stringify(arr) + "\n";
@@ -49,14 +48,30 @@ Array.prototype.stringify = function(strName) {
 };
 
 /**
- * [stringify description]
- * @param  {[type]} strName [description]
+ * 多次元配列もディープコピーできる
  * @return {[type]}         [description]
+ */
+Array.prototype.clone = function() {
+  return JSON.parse(JSON.stringify(this));
+};
+
+/**
+ * INFO: 3次元以降に対応していない。したい。
+ * @param  {[type]}
+ * @return {[type]}
  */
 Array.prototype.mapAll = function(fn) {
   return this.map((a, y)=> {
     return a.map((v, x)=> {
-      return fn(v, x, a);
+      return fn(v, [y,x], this);
     });
   });
 }
+
+/**
+ * 右回転する
+ * @return {[type]} [description]
+ */
+Array.prototype.turn = function() {
+  return this.mapAll((_, i, a)=> this[this.length-1-i[1]][i[0]]);
+};

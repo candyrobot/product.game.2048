@@ -8,8 +8,8 @@ export default class GameMaster {
     this.iStopLoop = 2000;
     this.iLoopCount = 0;
     this.boardMaster = new BoardMaster([this.mapSize, this.mapSize]);
-    this.add();
-    this.add();
+    this.add([[1]]);
+    this.add([[1]]);
 
     document.addEventListener('keydown',(e)=> {
       switch(e.keyCode){
@@ -36,29 +36,34 @@ export default class GameMaster {
     };
   }
 
-  add() {
+  add(map) {
     if(this.iLoopCount >= this.iStopLoop) {
       return;
     }
-    if(this.boardMaster.getPutablePositions([[1]]).length === 0) {
+    if(this.boardMaster.getPutablePositions(map).length === 0) {
       console.log('game over');
       return;
     }
     var position = this.getRandamPosition();
-    if(this.boardMaster.isAlreadyExist([[1]], position)) {
+    if(this.boardMaster.isAlreadyExist(map, position)) {
       console.warn('is already exist!');
       this.iLoopCount++;
-      this.add();
+      this.add(map);
+      return;
     }
-    this.boardMaster.add([[1]], position);
+    this.boardMaster.add(map, position);
     console.log(this.boardMaster._map.stringify());
   }
 
-  mergeBy2048(v, i, a) {
-    console.log(a);
+  mergeBy2048(_, i, a) {
+    if(this.iLoopCount >= this.iStopLoop) {
+      return;
+    }
+
     for(var j=i+1; j<a.length; j++) {
       if(a[i]===0 && a[j]!==0) {
-        var v=a[j];
+        this.iLoopCount++;
+        var v=this.mergeBy2048(a[j], j, a);
         a[j]=0;
         return v;
       }
@@ -72,23 +77,27 @@ export default class GameMaster {
   }
 
   doWhenPushKeyLeft() {
-    var map = this.boardMaster.getMap().mapAll(this.mergeBy2048);
+    var map = this.boardMaster.getMap().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]]));
     this.boardMaster.overrideMap(map);
-    this.add();
+    this.add([[1]]);
   }
 
   doWhenPushKeyTop() {
-    var map = this.boardMaster.getMap().transpose().mapAll(this.mergeBy2048).transpose();
+    var map = this.boardMaster.getMap().transpose().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).transpose();
     this.boardMaster.overrideMap(map);
-    this.add();
+    this.add([[1]]);
   }
 
   doWhenPushKeyRight() {
-    this.add();
+    var map = this.boardMaster.getMap().turn().turn().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).turn().turn();
+    this.boardMaster.overrideMap(map);
+    this.add([[1]]);
   }
 
   doWhenPushKeyBottom() {
-    this.add();
+    var map = this.boardMaster.getMap().turn().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).turn().turn().turn();
+    this.boardMaster.overrideMap(map);
+    this.add([[1]]);
   }
 
 }

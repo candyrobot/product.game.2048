@@ -5,14 +5,9 @@ export default class BoardMaster {
    * @return {[type]}     [description]
    */
   constructor(mapSizes) {
-    this._map = [];
-    for (var x=0; x<mapSizes[0]; x++) {
-      this._map[x] = [];
-      for (var y=0; y<mapSizes[1]; y++) {
-        this._map[x][y] = 0;
-      }
-    }
-    this._map = this._map.transpose();
+    this._map = Array(mapSizes[1]).fill((()=> {
+      return Array(mapSizes[0]).fill(0);
+    })());
   }
 
   /**
