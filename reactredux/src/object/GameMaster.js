@@ -78,6 +78,8 @@ export default class GameMaster {
   }
 
   doWhenPushKeyTop() {
+    var map = this.boardMaster.getMap().transpose().mapAll(this.mergeBy2048).transpose();
+    this.boardMaster.overrideMap(map);
     this.add();
   }
 
