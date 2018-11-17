@@ -64,8 +64,12 @@ export default class BoardMaster {
     });
   }
 
-  getMap() {
-    return this._map;
+  /**
+   * 参照渡ししたい場合はtrueを引数にいれる
+   * @return {[type]}
+   */
+  getMap(isAsReference = false) {
+    return isAsReference ? this._map : this._map.clone();
   }
 
   overrideMap(map) {

@@ -41,7 +41,7 @@ Array.prototype.transpose = function() {
  */
 Array.prototype.stringify = function() {
   var str = '\n';
-  this.map((arr)=> {
+  this.forEach((arr)=> {
     str += JSON.stringify(arr) + "\n";
   });
   return str;

@@ -8,33 +8,39 @@ export default class GameMaster {
     this.iStopLoop = 2000;
     this.iLoopCount = 0;
     this.boardMaster = new BoardMaster([this.mapSize, this.mapSize]);
+    window.bm = this.boardMaster;
     document.addEventListener('keydown',(e)=> {
-      console.log('push');
-      console.log(this.boardMaster._map.stringify());
+      console.log('===========');
+      console.log(e.keyCode);
       var map = [];
       switch(e.keyCode){
         case 37:
-          map = this.doWhenLeft();
+          // debugger;
+          map = this.doWhenLeft(true);
           break;
         case 38:
-          map = this.doWhenTop();
+          // debugger;
+          map = this.doWhenTop(true);
           break;
         case 39:
-          map = this.doWhenRight();
+          // debugger;
+          map = this.doWhenRight(true);
           break;
         case 40:
-          map = this.doWhenBottom();
+          // debugger;
+          map = this.doWhenBottom(true);
           break;
         default:
           return;
       }
+      console.log(map);
       if(map===false)
         return;
-      console.log('to');
-      console.log(map.stringify());
+      // console.log('to');
+      // console.log(map.stringify());
       this.boardMaster.overrideMap(map);
       this.add([[1]]);
-      console.log('add');
+      // console.log('add');
       console.log(this.boardMaster.getMap().stringify());
       if(this.isNoMore()) {
         console.log('game over');
@@ -44,6 +50,7 @@ export default class GameMaster {
 
     this.add([[1]]);
     this.add([[1]]);
+    console.log(this.boardMaster._map.stringify());
   }
 
   add(map) {
@@ -54,6 +61,7 @@ export default class GameMaster {
   }
 
   isNoMore() {
+    // console.log('just check');
     return this.doWhenLeft() === false &&
     this.doWhenTop() === false &&
     this.doWhenRight() === false &&
@@ -65,44 +73,52 @@ export default class GameMaster {
       return;
 
     for(var j=i+1; j<a.length; j++) {
+      var v;
       if(a[i]===0 && a[j]!==0) {
         this.iLoopCount++;
-        var v=this.mergeBy2048(a[j], j, a);
+        v=this.mergeBy2048(a[j], j, a);
         a[j]=0;
         return v;
       }
       if(a[i]>0 && a[i]===a[j]) {
-        var v=a[i]+a[j];
+        v=a[i]+a[j];
         a[j]=0;
         return v;
+      }
+      if(a[i]>0 && a[j]>0) {
+        break;
       }
     }
     return a[i];
   }
 
-  doWhenLeft() {
+  doWhenLeft(log) {
     var map = this.boardMaster.getMap().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]]));
+    // debugger;
     return this.boardMaster.getPositionsOnly(position=>
       map[position.y][position.x]!==this.boardMaster.getMap()[position.y][position.x]
     ).length===0 ? false : map;
   }
 
-  doWhenTop() {
-    var map = this.boardMaster.getMap().transpose().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).transpose();
+  doWhenTop(log) {
+    var map = this.boardMaster.getMap().turn().turn().turn().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).turn();
+    // debugger;
     return this.boardMaster.getPositionsOnly(position=>
       map[position.y][position.x]!==this.boardMaster.getMap()[position.y][position.x]
     ).length===0 ? false : map;
   }
 
-  doWhenRight() {
+  doWhenRight(log) {
     var map = this.boardMaster.getMap().turn().turn().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).turn().turn();
+    // debugger;
     return this.boardMaster.getPositionsOnly(position=>
       map[position.y][position.x]!==this.boardMaster.getMap()[position.y][position.x]
     ).length===0 ? false : map;
   }
 
-  doWhenBottom() {
+  doWhenBottom(log) {
     var map = this.boardMaster.getMap().turn().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).turn().turn().turn();
+    // debugger;
     return this.boardMaster.getPositionsOnly(position=>
       map[position.y][position.x]!==this.boardMaster.getMap()[position.y][position.x]
     ).length===0 ? false : map;
