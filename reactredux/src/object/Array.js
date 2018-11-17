@@ -48,6 +48,21 @@ Array.prototype.stringify = function() {
 };
 
 /**
+ * 条件(fn)にあった場所`position`を配列で返す
+ * INFO: 3次元以降に対応していない。したい。
+ * @return {Array}
+ */
+Array.prototype.getPositions = function(fn) {
+  return this.map((a, y)=> {
+    return a.map((v, x)=> {
+      return fn({ x:x, y:y }) ? { x:x, y:y } : undefined;
+    }).filter((v)=> v!==undefined);
+  })
+  // INFO: 2次元配列を1次元配列に
+  .reduce((pre,current) => {pre.push(...current);return pre},[]);
+};
+
+/**
  * 多次元配列もディープコピーできる
  * @return {[type]}         [description]
  */

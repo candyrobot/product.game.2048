@@ -27,20 +27,6 @@ export default class BoardMaster {
   }
 
   /**
-   * 条件(fn)にあった場所`position`を配列で返す
-   * @return {Array}
-   */
-  getPositionsOnly(fn) {
-    return this._map.map((a, y)=> {
-      return a.map((v, x)=> {
-        return fn({ x:x, y:y }) ? { x:x, y:y } : undefined;
-      }).filter((v)=> v!==undefined);
-    })
-    // INFO: 2次元配列を1次元配列に
-    .reduce((pre,current) => {pre.push(...current);return pre},[]);
-  }
-
-  /**
    * [isOverBeyondMap description]
    * @param  {[type]} postion [description]
    * @param  {[type]} map     [description]

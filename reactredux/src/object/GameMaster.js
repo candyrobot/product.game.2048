@@ -8,27 +8,22 @@ export default class GameMaster {
     this.iStopLoop = 2000;
     this.iLoopCount = 0;
     this.boardMaster = new BoardMaster([this.mapSize, this.mapSize]);
-    window.bm = this.boardMaster;
     document.addEventListener('keydown',(e)=> {
       console.log('===========');
       console.log(e.keyCode);
       var map = [];
       switch(e.keyCode){
         case 37:
-          // debugger;
-          map = this.doWhenLeft(true);
+          map = this.doWhenLeft();
           break;
         case 38:
-          // debugger;
-          map = this.doWhenTop(true);
+          map = this.doWhenTop();
           break;
         case 39:
-          // debugger;
-          map = this.doWhenRight(true);
+          map = this.doWhenRight();
           break;
         case 40:
-          // debugger;
-          map = this.doWhenBottom(true);
+          map = this.doWhenBottom();
           break;
         default:
           return;
@@ -36,31 +31,32 @@ export default class GameMaster {
       console.log(map);
       if(map===false)
         return;
-      // console.log('to');
-      // console.log(map.stringify());
       this.boardMaster.overrideMap(map);
-      this.add([[1]]);
-      // console.log('add');
+      this.addRandom([[1]]);
       console.log(this.boardMaster.getMap().stringify());
-      if(this.isNoMore()) {
+      if(this.isNoMoreMerge()) {
         console.log('game over');
         return;
       }
     });
 
-    this.add([[1]]);
-    this.add([[1]]);
+    this.initializeGame();
+  }
+
+  initializeGame() {
+    this.addRandom([[1]]);
+    this.addRandom([[1]]);
     console.log(this.boardMaster._map.stringify());
   }
 
-  add(map) {
-    var positions = this.boardMaster.getPositionsOnly(position=>
+  addRandom(map) {
+    var positions = this.boardMaster.getMap().getPositions(position=>
       !this.boardMaster.isOverBeyondMap(map, position) && !this.boardMaster.isAlreadyExist(map, position)
     );
     this.boardMaster.add(map, positions[Math.floor( Math.random() * positions.length )]);
   }
 
-  isNoMore() {
+  isNoMoreMerge() {
     // console.log('just check');
     return this.doWhenLeft() === false &&
     this.doWhenTop() === false &&
@@ -92,35 +88,29 @@ export default class GameMaster {
     return a[i];
   }
 
-  doWhenLeft(log) {
+  isUnchangedTo(map) {
+    return this.boardMaster.getMap().getPositions(position=>
+      map[position.y][position.x]!==this.boardMaster.getMap()[position.y][position.x]
+    ).length===0;
+  }
+
+  doWhenLeft() {
     var map = this.boardMaster.getMap().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]]));
-    // debugger;
-    return this.boardMaster.getPositionsOnly(position=>
-      map[position.y][position.x]!==this.boardMaster.getMap()[position.y][position.x]
-    ).length===0 ? false : map;
+    return this.isUnchangedTo(map) ? false : map;
   }
 
-  doWhenTop(log) {
+  doWhenTop() {
     var map = this.boardMaster.getMap().turn().turn().turn().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).turn();
-    // debugger;
-    return this.boardMaster.getPositionsOnly(position=>
-      map[position.y][position.x]!==this.boardMaster.getMap()[position.y][position.x]
-    ).length===0 ? false : map;
+    return this.isUnchangedTo(map) ? false : map;
   }
 
-  doWhenRight(log) {
+  doWhenRight() {
     var map = this.boardMaster.getMap().turn().turn().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).turn().turn();
-    // debugger;
-    return this.boardMaster.getPositionsOnly(position=>
-      map[position.y][position.x]!==this.boardMaster.getMap()[position.y][position.x]
-    ).length===0 ? false : map;
+    return this.isUnchangedTo(map) ? false : map;
   }
 
-  doWhenBottom(log) {
+  doWhenBottom() {
     var map = this.boardMaster.getMap().turn().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).turn().turn().turn();
-    // debugger;
-    return this.boardMaster.getPositionsOnly(position=>
-      map[position.y][position.x]!==this.boardMaster.getMap()[position.y][position.x]
-    ).length===0 ? false : map;
+    return this.isUnchangedTo(map) ? false : map;
   }
 }
