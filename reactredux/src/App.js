@@ -1,11 +1,23 @@
 import React, { Component } from 'react';
+import GameBoard from './component/GameBoard';
 import logo from './logo.svg';
 import './App.css';
+import $ from 'jquery';
 
-import GameMaster from './object/GameMaster'
-new GameMaster();
+import GameMaster from './object/GameMaster';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.gm = new GameMaster({
+      callback: {
+        addRandom: (map)=> {
+          // xxxx.refresh();
+          this.setState({ map: map });
+        }
+      }
+    });
+  }
   render() {
     return (
       <div className="App">
@@ -23,6 +35,7 @@ class App extends Component {
             Learn React
           </a>
         </header>
+        <GameBoard map={this.gm.dumpMap()} />
       </div>
     );
   }

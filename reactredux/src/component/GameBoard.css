@@ -1,0 +1,26 @@
+
+.GameBoard {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  color: white;
+}
+
+.GameBoard >*{
+  margin: auto;
+}
+
+.GameBoard h1 {
+  margin-top: 80px;
+  font-family: impact;
+  font-size: 80px;
+}
+
+.GameBoard td {
+  width: 40px;
+  height: 40px;
+  border: 1px solid white;
+  font-size: 2rem;
+  font-weight: bold;
+}

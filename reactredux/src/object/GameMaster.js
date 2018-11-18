@@ -3,10 +3,11 @@ import BoardMaster from './BoardMaster';
 
 export default class GameMaster {
 
-  constructor(argument) {
+  constructor(options = {}) {
     this.mapSize = 4;
     this.iStopLoop = 2000;
     this.iLoopCount = 0;
+    this.callback = options.callback || {};
     this.boardMaster = new BoardMaster([this.mapSize, this.mapSize]);
     document.addEventListener('keydown',(e)=> {
       console.log('===========');
@@ -41,12 +42,20 @@ export default class GameMaster {
     });
 
     this.initializeGame();
+
+    // return {
+    //   on: (eventName, fn)=> { this.callback[eventName] = fn; }
+    // };
   }
 
   initializeGame() {
     this.addRandom([[1]]);
     this.addRandom([[1]]);
-    console.log(this.boardMaster._map.stringify());
+    console.log(this.boardMaster.getMap().stringify());
+  }
+
+  dumpMap() {
+    return this.boardMaster.getMap();
   }
 
   addRandom(map) {
@@ -54,6 +63,7 @@ export default class GameMaster {
       !this.boardMaster.isOverBeyondMap(map, position) && !this.boardMaster.isAlreadyExist(map, position)
     );
     this.boardMaster.add(map, positions[Math.floor( Math.random() * positions.length )]);
+    this.callback.addRandom && this.callback.addRandom(this.boardMaster.getMap());
   }
 
   isNoMoreMerge() {

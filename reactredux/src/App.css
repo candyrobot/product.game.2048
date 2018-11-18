@@ -30,3 +30,11 @@
     transform: rotate(360deg);
   }
 }
+
+.App-header img {
+  opacity: .3;
+}
+.App-header p,
+.App-header a {
+  display: none;
+}
