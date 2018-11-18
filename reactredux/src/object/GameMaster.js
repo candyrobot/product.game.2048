@@ -74,21 +74,26 @@ export default class GameMaster {
     this.doWhenBottom() === false
   }
 
-  mergeBy2048(_, i, a) {
+  mergeBy2048(v, p, map) {
     if(this.iLoopCount >= this.iStopLoop)
       return;
+
+    var a = map[p.y];
+    var i = p.x;
 
     for(var j=i+1; j<a.length; j++) {
       var v;
       if(a[i]===0 && a[j]!==0) {
         this.iLoopCount++;
-        v=this.mergeBy2048(a[j], j, a);
+        v=this.mergeBy2048(a[j], { x:j, y:p.y }, map);
         a[j]=0;
+        this.callback.mergeBy2048 && this.callback.mergeBy2048({ from:{ x:j, y:p.y }, to:{ x:i, y:p.y } });
         return v;
       }
       if(a[i]>0 && a[i]===a[j]) {
         v=a[i]+a[j];
         a[j]=0;
+        this.callback.mergeBy2048 && this.callback.mergeBy2048({ from:{ x:j, y:p.y }, to:{ x:i, y:p.y } });
         return v;
       }
       if(a[i]>0 && a[j]>0) {
@@ -105,22 +110,22 @@ export default class GameMaster {
   }
 
   doWhenLeft() {
-    var map = this.boardMaster.getMap().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]]));
+    var map = this.boardMaster.getMap().mapAll((v,p,map)=> this.mergeBy2048(v,p,map));
     return this.isUnchangedTo(map) ? false : map;
   }
 
   doWhenTop() {
-    var map = this.boardMaster.getMap().turn().turn().turn().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).turn();
+    var map = this.boardMaster.getMap().turn().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p,map)).turn();
     return this.isUnchangedTo(map) ? false : map;
   }
 
   doWhenRight() {
-    var map = this.boardMaster.getMap().turn().turn().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).turn().turn();
+    var map = this.boardMaster.getMap().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p,map)).turn().turn();
     return this.isUnchangedTo(map) ? false : map;
   }
 
   doWhenBottom() {
-    var map = this.boardMaster.getMap().turn().mapAll((v,i,a)=> this.mergeBy2048(v,i[1],a[i[0]])).turn().turn().turn();
+    var map = this.boardMaster.getMap().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p,map)).turn().turn().turn();
     return this.isUnchangedTo(map) ? false : map;
   }
 }

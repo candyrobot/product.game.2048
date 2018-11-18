@@ -11,11 +11,15 @@ class GameBoard extends Component {
       <div className="GameBoard">
         <h1>2048</h1>
         <table>
-          {this.props.map.map((a, y)=> {
-            return <tr>{a.map((v, x)=> {
-              return <td>{v}</td>
-            })}</tr>
-          })}
+          <tbody>
+            {this.props.map.map((a, y)=> {
+              return <tr key={y}>{a.map((v, x)=> {
+                return <td key={x}>
+                  <span>{v}</span>
+                </td>
+              })}</tr>
+            })}
+          </tbody>
         </table>
       </div>
     );

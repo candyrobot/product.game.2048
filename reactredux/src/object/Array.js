@@ -78,15 +78,15 @@ Array.prototype.clone = function() {
 Array.prototype.mapAll = function(fn) {
   return this.map((a, y)=> {
     return a.map((v, x)=> {
-      return fn(v, [y,x], this);
+      return fn(v, { x:x, y:y }, this);
     });
   });
-}
+};
 
 /**
  * 右回転する
  * @return {[type]} [description]
  */
 Array.prototype.turn = function() {
-  return this.mapAll((_, i, a)=> this[this.length-1-i[1]][i[0]]);
+  return this.mapAll((_, p, a)=> this[this.length-1-p.x][p.y]);
 };
