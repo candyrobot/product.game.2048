@@ -5,9 +5,13 @@ export default class BoardMaster {
    * @return {[type]}     [description]
    */
   constructor(mapSizes) {
-    this._map = Array(mapSizes[1]).fill((()=> {
-      return Array(mapSizes[0]).fill(0);
-    })());
+    this._map = [];
+    for (var y=0; y<mapSizes[1]; y++) {
+      this._map[y] = [];
+      for (var x=0; x<mapSizes[0]; x++) {
+        this._map[y][x] = { x:x, y:y, value:0 };
+      }
+    }
   }
 
   /**
@@ -16,8 +20,10 @@ export default class BoardMaster {
    * @param {object}
    */
   add(map, position = { x:0, y:0 }) {
+    // TODO [[1]] を [[{value: 1}]]に
+    // map.
     this._map = this._map.merge(position.y, map, function(val1, val2) {
-      return val1.merge(position.x, val2, (val1, val2)=> val1 + val2);
+      return val1.merge(position.x, val2, (val1, val2)=> val1.value + val2.value);
     });
     // or
     // map().map((arrOfX)=> {
@@ -28,9 +34,9 @@ export default class BoardMaster {
 
   /**
    * [isOverBeyondMap description]
-   * @param  {[type]} postion [description]
-   * @param  {[type]} map     [description]
-   * @return {[type]}         [description]
+   * @param  {[type]} position [description]
+   * @param  {[type]} map      [description]
+   * @return {[type]}          [description]
    */
   isOverBeyondMap(map, position) {
     return this._map.length < position.y + map.length || this._map.some((a, i)=> {
@@ -46,7 +52,8 @@ export default class BoardMaster {
    */
   isAlreadyExist(map, position) {
     return this._map.some((a, y)=> {
-      return a.some((v, x)=> map[y-position.y] && map[y-position.y][x-position.x] && v + map[y-position.y][x-position.x] > 1);
+      return a.some((dat, x)=> map[y-position.y] && map[y-position.y][x-position.x] &&
+             dat.value + map[y-position.y][x-position.x] > 1);
     });
   }
 
