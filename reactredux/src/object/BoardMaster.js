@@ -20,16 +20,22 @@ export default class BoardMaster {
    * @param {object}
    */
   add(map, position = { x:0, y:0 }) {
-    // TODO [[1]] を [[{value: 1}]]に
-    // map.
-    this._map = this._map.merge(position.y, map, function(val1, val2) {
-      return val1.merge(position.x, val2, (val1, val2)=> val1.value + val2.value);
+    map = this.setPosition(map, position);
+    return this._map = this._map.merge(position.y, map, function(val1, val2) {
+      return val1.merge(position.x, val2, (val1, val2)=> {
+        return { x: val1.x, y: val1.y, value: val1.value + val2.value };
+      });
     });
     // or
     // map().map((arrOfX)=> {
     //   this._map[y][x]++;
     // });
-    return this._map;
+  }
+
+  setPosition(map, position) {
+    return map.map((a, y)=> a.map((dat, x)=> {
+      return { x: x + position.x, y: y + position.y, value: dat.value }
+    }));
   }
 
   /**
@@ -51,10 +57,7 @@ export default class BoardMaster {
    * @return {Boolean}          [description]
    */
   isAlreadyExist(map, position) {
-    return this._map.some((a, y)=> {
-      return a.some((dat, x)=> map[y-position.y] && map[y-position.y][x-position.x] &&
-             dat.value + map[y-position.y][x-position.x] > 1);
-    });
+    return map.some((a, y)=> a.some((dat, x)=> this._map[y+position.y][x+position.x].value !== 0));
   }
 
   /**
