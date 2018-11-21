@@ -12,18 +12,15 @@ class App extends Component {
     super(props);
     this.gm = new GameMaster({
       callback: {
-        addRandom: (map)=> {
-          // xxxx.refresh();
-          this.setState({ map: map });
-        },
         mergeBy2048: (dat)=> {
           var w = $('table td').outerWidth(true);
           var $el = $(`table [data-y="${dat.y}"] [data-x="${dat.x}"] div`)
             .stop(1,1)
             .transition({
               x: ( dat.toX - dat.x ) * w, y: ( dat.toY - dat.y ) * w
-            }, 2000, ()=> {
+            }, 20000, ()=> {
               $el.css({ x: 0, y: 0 });
+              this.setState({ map: this.gm.dumpMap() });
             });
         }
       }
