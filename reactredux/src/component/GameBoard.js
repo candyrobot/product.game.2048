@@ -3,9 +3,6 @@ import './GameBoard.css';
 // import $ from 'jquery';
 
 class GameBoard extends Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     return (
       <div className="GameBoard">

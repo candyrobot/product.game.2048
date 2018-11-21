@@ -82,7 +82,6 @@ export default class GameMaster {
     var i = p.x;
 
     for(var j=i+1; j<a.length; j++) {
-      var v;
       if(a[i]===0 && a[j]!==0) {
         this.iLoopCount++;
         v=this.mergeBy2048(a[j], { x:j, y:p.y }, map);
