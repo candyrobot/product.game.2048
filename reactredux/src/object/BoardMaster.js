@@ -21,15 +21,17 @@ export default class BoardMaster {
    */
   add(map, position = { x:0, y:0 }) {
     map = this.setPosition(map, position);
-    return this._map = this._map.merge(position.y, map, function(val1, val2) {
+    this._map = this._map.merge(position.y, map, function(val1, val2) {
       return val1.merge(position.x, val2, (val1, val2)=> {
-        return { x: val1.x, y: val1.y, value: val1.value + val2.value };
+        val1.value = val1.value + val2.value;
+        return val1;
       });
     });
     // or
     // map().map((arrOfX)=> {
     //   this._map[y][x]++;
     // });
+    return this._map;
   }
 
   setPosition(map, position) {

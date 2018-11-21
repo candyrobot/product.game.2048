@@ -86,15 +86,15 @@ export default class GameMaster {
     for(var j=i+1; j<a.length; j++) {
       if(a[i].value===0 && a[j].value!==0) {
         this.iLoopCount++;
-        a[i]=this.mergeBy2048(a[j],j,a);
+        a[i].value=this.mergeBy2048(a[j],j,a).value;
         a[j].value=0;
-        // this.callback.mergeBy2048 && this.callback.mergeBy2048({ from:{ x:j, y:p.y }, to:{ x:i, y:p.y } });
+        this.callback.mergeBy2048 && this.callback.mergeBy2048({ x:a[j].x, y:a[j].y, toX:a[i].x, toY:a[i].y });
         return a[i];
       }
       if(a[i].value>0 && a[i].value===a[j].value) {
         a[i].value=a[i].value+a[j].value;
         a[j].value=0;
-        // this.callback.mergeBy2048 && this.callback.mergeBy2048({ from:{ x:j, y:p.y }, to:{ x:i, y:p.y } });
+        this.callback.mergeBy2048 && this.callback.mergeBy2048({ x:a[j].x, y:a[j].y, toX:a[i].x, toY:a[i].y });
         return a[i];
       }
       if(a[i].value>0 && a[j].value>0) {

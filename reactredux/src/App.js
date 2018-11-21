@@ -3,6 +3,7 @@ import GameBoard from './component/GameBoard';
 import logo from './logo.svg';
 import './App.css';
 import $ from 'jquery';
+import 'jquery.transit';
 
 import GameMaster from './object/GameMaster';
 
@@ -16,11 +17,14 @@ class App extends Component {
           this.setState({ map: map });
         },
         mergeBy2048: (dat)=> {
-          $(`table [key="${dat.y}"] [key="${dat.x}"] span`).css({
-            x: dat.x
-          }).transit({
-            x: dat.toX
-          });
+          var w = $('table td').outerWidth(true);
+          var $el = $(`table [data-y="${dat.y}"] [data-x="${dat.x}"] div`)
+            .stop(1,1)
+            .transition({
+              x: ( dat.toX - dat.x ) * w, y: ( dat.toY - dat.y ) * w
+            }, 2000, ()=> {
+              $el.css({ x: 0, y: 0 });
+            });
         }
       }
     });
