@@ -10,9 +10,9 @@ class GameBoard extends Component {
         <table>
           <tbody>
             {this.props.map.map((a, y)=> {
-              return <tr key={y}>{a.map((v, x)=> {
+              return <tr key={y}>{a.map((dat, x)=> {
                 return <td key={x}>
-                  <span>{v}</span>
+                  <span>{dat.value}</span>
                 </td>
               })}</tr>
             })}

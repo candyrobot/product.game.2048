@@ -15,26 +15,25 @@ export default class GameMaster {
       var map = [];
       switch(e.keyCode){
         case 37:
-          map = this.doWhenLeft();
+          map = this.mergeToLeft();
           break;
         case 38:
-          map = this.doWhenTop();
+          map = this.mergeToTop();
           break;
         case 39:
-          map = this.doWhenRight();
+          map = this.mergeToRight();
           break;
         case 40:
-          map = this.doWhenBottom();
+          map = this.mergeToBottom();
           break;
         default:
           return;
       }
-      console.log(map);
-      if(map===false)
+      if(this.isUnchangedTo(map))
         return;
       this.boardMaster.overrideMap(map);
-      this.addRandom([[1]]);
-      console.log(this.boardMaster.getMap().stringify());
+      this.addRandom();
+      console.log(1, this.boardMaster.getMap().stringify());
       if(this.isNoMoreMerge()) {
         console.log('game over');
         return;
@@ -49,8 +48,8 @@ export default class GameMaster {
   }
 
   initializeGame() {
-    this.addRandom([[1]]);
-    this.addRandom([[1]]);
+    this.addRandom();
+    this.addRandom();
     console.log(this.boardMaster.getMap().stringify());
   }
 
@@ -58,44 +57,47 @@ export default class GameMaster {
     return this.boardMaster.getMap();
   }
 
-  addRandom(map) {
-    var positions = this.boardMaster.getMap().getPositions(position=>
-      !this.boardMaster.isOverBeyondMap(map, position) && !this.boardMaster.isAlreadyExist(map, position)
-    );
-    this.boardMaster.add(map, positions[Math.floor( Math.random() * positions.length )]);
+  addRandom() {
+    var mapToAdd = [[{
+      value: 1,
+      x: undefined,
+      y: undefined,
+    }]];
+    var positions = this.boardMaster.getMap().getPositions(position=> {
+      return !this.boardMaster.isOverBeyondMap(mapToAdd, position) &&
+             !this.boardMaster.isAlreadyExist(mapToAdd, position);
+    });
+    if(positions.length === 0)
+      return false;
+    this.boardMaster.add(mapToAdd, positions[Math.floor( Math.random() * positions.length )]);
     this.callback.addRandom && this.callback.addRandom(this.boardMaster.getMap());
   }
 
   isNoMoreMerge() {
-    // console.log('just check');
-    return this.doWhenLeft() === false &&
-    this.doWhenTop() === false &&
-    this.doWhenRight() === false &&
-    this.doWhenBottom() === false
+    return this.isUnchangedTo(this.mergeToLeft()) &&
+    this.isUnchangedTo(this.mergeToTop()) &&
+    this.isUnchangedTo(this.mergeToRight()) &&
+    this.isUnchangedTo(this.mergeToBottom())
   }
 
-  mergeBy2048(v, p, map) {
+  mergeBy2048(dat, i, a) {
     if(this.iLoopCount >= this.iStopLoop)
       return;
-
-    var a = map[p.y];
-    var i = p.x;
-
     for(var j=i+1; j<a.length; j++) {
-      if(a[i]===0 && a[j]!==0) {
+      if(a[i].value===0 && a[j].value!==0) {
         this.iLoopCount++;
-        v=this.mergeBy2048(a[j], { x:j, y:p.y }, map);
-        a[j]=0;
-        this.callback.mergeBy2048 && this.callback.mergeBy2048({ from:{ x:j, y:p.y }, to:{ x:i, y:p.y } });
-        return v;
+        a[i]=this.mergeBy2048(a[j],j,a);
+        a[j].value=0;
+        // this.callback.mergeBy2048 && this.callback.mergeBy2048({ from:{ x:j, y:p.y }, to:{ x:i, y:p.y } });
+        return a[i];
       }
-      if(a[i]>0 && a[i]===a[j]) {
-        v=a[i]+a[j];
-        a[j]=0;
-        this.callback.mergeBy2048 && this.callback.mergeBy2048({ from:{ x:j, y:p.y }, to:{ x:i, y:p.y } });
-        return v;
+      if(a[i].value>0 && a[i].value===a[j].value) {
+        a[i].value=a[i].value+a[j].value;
+        a[j].value=0;
+        // this.callback.mergeBy2048 && this.callback.mergeBy2048({ from:{ x:j, y:p.y }, to:{ x:i, y:p.y } });
+        return a[i];
       }
-      if(a[i]>0 && a[j]>0) {
+      if(a[i].value>0 && a[j].value>0) {
         break;
       }
     }
@@ -104,27 +106,23 @@ export default class GameMaster {
 
   isUnchangedTo(map) {
     return this.boardMaster.getMap().getPositions(position=>
-      map[position.y][position.x]!==this.boardMaster.getMap()[position.y][position.x]
+      map[position.y][position.x].value!==this.boardMaster.getMap()[position.y][position.x].value
     ).length===0;
   }
 
-  doWhenLeft() {
-    var map = this.boardMaster.getMap().mapAll((v,p,map)=> this.mergeBy2048(v,p,map));
-    return this.isUnchangedTo(map) ? false : map;
+  mergeToLeft() {
+    return this.boardMaster.getMap().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y]));
   }
 
-  doWhenTop() {
-    var map = this.boardMaster.getMap().turn().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p,map)).turn();
-    return this.isUnchangedTo(map) ? false : map;
+  mergeToTop() {
+    return this.boardMaster.getMap().turn().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y])).turn();
   }
 
-  doWhenRight() {
-    var map = this.boardMaster.getMap().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p,map)).turn().turn();
-    return this.isUnchangedTo(map) ? false : map;
+  mergeToRight() {
+    return this.boardMaster.getMap().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y])).turn().turn();
   }
 
-  doWhenBottom() {
-    var map = this.boardMaster.getMap().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p,map)).turn().turn().turn();
-    return this.isUnchangedTo(map) ? false : map;
+  mergeToBottom() {
+    return this.boardMaster.getMap().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y])).turn().turn().turn();
   }
 }
