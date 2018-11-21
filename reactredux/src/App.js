@@ -14,6 +14,13 @@ class App extends Component {
         addRandom: (map)=> {
           // xxxx.refresh();
           this.setState({ map: map });
+        },
+        mergeBy2048: (dat)=> {
+          $(`table [key="${dat.y}"] [key="${dat.x}"] span`).css({
+            x: dat.x
+          }).transit({
+            x: dat.toX
+          });
         }
       }
     });

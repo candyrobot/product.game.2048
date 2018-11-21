@@ -80,25 +80,21 @@ export default class GameMaster {
     this.isUnchangedTo(this.mergeToBottom())
   }
 
-  mergeBy2048(dat, p, map) {
+  mergeBy2048(dat, i, a) {
     if(this.iLoopCount >= this.iStopLoop)
       return;
-
-    var a = map[p.y];
-    var i = p.x;
-
     for(var j=i+1; j<a.length; j++) {
       if(a[i].value===0 && a[j].value!==0) {
         this.iLoopCount++;
-        a[i]=this.mergeBy2048(a[j], { x:j, y:p.y }, map);
+        a[i]=this.mergeBy2048(a[j],j,a);
         a[j].value=0;
-        this.callback.mergeBy2048 && this.callback.mergeBy2048({ from:{ x:j, y:p.y }, to:{ x:i, y:p.y } });
+        // this.callback.mergeBy2048 && this.callback.mergeBy2048({ from:{ x:j, y:p.y }, to:{ x:i, y:p.y } });
         return a[i];
       }
       if(a[i].value>0 && a[i].value===a[j].value) {
         a[i].value=a[i].value+a[j].value;
         a[j].value=0;
-        this.callback.mergeBy2048 && this.callback.mergeBy2048({ from:{ x:j, y:p.y }, to:{ x:i, y:p.y } });
+        // this.callback.mergeBy2048 && this.callback.mergeBy2048({ from:{ x:j, y:p.y }, to:{ x:i, y:p.y } });
         return a[i];
       }
       if(a[i].value>0 && a[j].value>0) {
@@ -115,18 +111,18 @@ export default class GameMaster {
   }
 
   mergeToLeft() {
-    return this.boardMaster.getMap().mapAll((v,p,map)=> this.mergeBy2048(v,p,map));
+    return this.boardMaster.getMap().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y]));
   }
 
   mergeToTop() {
-    return this.boardMaster.getMap().turn().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p,map)).turn();
+    return this.boardMaster.getMap().turn().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y])).turn();
   }
 
   mergeToRight() {
-    return this.boardMaster.getMap().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p,map)).turn().turn();
+    return this.boardMaster.getMap().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y])).turn().turn();
   }
 
   mergeToBottom() {
-    return this.boardMaster.getMap().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p,map)).turn().turn().turn();
+    return this.boardMaster.getMap().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y])).turn().turn().turn();
   }
 }
