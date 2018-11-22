@@ -18,7 +18,7 @@ class App extends Component {
             .stop(1,1)
             .transition({
               x: ( dat.toX - dat.x ) * w, y: ( dat.toY - dat.y ) * w
-            }, 20000, ()=> {
+            }, 300, 'easeOutBack', ()=> {
               $el.css({ x: 0, y: 0 });
               this.setState({ map: this.gm.dumpMap() });
             });

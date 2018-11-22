@@ -15,16 +15,16 @@ export default class GameMaster {
       var map = [];
       switch(e.keyCode){
         case 37:
-          map = this.mergeToLeft();
+          map = this.mergeToLeft({ doWhenMerged: this.callback.mergeBy2048 });
           break;
         case 38:
-          map = this.mergeToTop();
+          map = this.mergeToTop({ doWhenMerged: this.callback.mergeBy2048 });
           break;
         case 39:
-          map = this.mergeToRight();
+          map = this.mergeToRight({ doWhenMerged: this.callback.mergeBy2048 });
           break;
         case 40:
-          map = this.mergeToBottom();
+          map = this.mergeToBottom({ doWhenMerged: this.callback.mergeBy2048 });
           break;
         default:
           return;
@@ -75,26 +75,27 @@ export default class GameMaster {
 
   isNoMoreMerge() {
     return this.isUnchangedTo(this.mergeToLeft()) &&
-    this.isUnchangedTo(this.mergeToTop()) &&
-    this.isUnchangedTo(this.mergeToRight()) &&
-    this.isUnchangedTo(this.mergeToBottom())
+           this.isUnchangedTo(this.mergeToTop()) &&
+           this.isUnchangedTo(this.mergeToRight()) &&
+           this.isUnchangedTo(this.mergeToBottom())
   }
 
-  mergeBy2048(dat, i, a) {
+  mergeBy2048(dat, i, a, option = {}) {
     if(this.iLoopCount >= this.iStopLoop)
       return;
     for(var j=i+1; j<a.length; j++) {
       if(a[i].value===0 && a[j].value!==0) {
         this.iLoopCount++;
-        a[i].value=this.mergeBy2048(a[j],j,a).value;
+        a[i].value=a[j].value;
         a[j].value=0;
-        this.callback.mergeBy2048 && this.callback.mergeBy2048({ x:a[j].x, y:a[j].y, toX:a[i].x, toY:a[i].y });
+        option.doWhenMerged && option.doWhenMerged({ x:a[j].x, y:a[j].y, toX:a[i].x, toY:a[i].y });
+        a[i].value=this.mergeBy2048(a[i],i,a,option).value;
         return a[i];
       }
       if(a[i].value>0 && a[i].value===a[j].value) {
         a[i].value=a[i].value+a[j].value;
         a[j].value=0;
-        this.callback.mergeBy2048 && this.callback.mergeBy2048({ x:a[j].x, y:a[j].y, toX:a[i].x, toY:a[i].y });
+        option.doWhenMerged && option.doWhenMerged({ x:a[j].x, y:a[j].y, toX:a[i].x, toY:a[i].y });
         return a[i];
       }
       if(a[i].value>0 && a[j].value>0) {
@@ -110,19 +111,19 @@ export default class GameMaster {
     ).length===0;
   }
 
-  mergeToLeft() {
-    return this.boardMaster.getMap().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y]));
+  mergeToLeft(option) {
+    return this.boardMaster.getMap().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y],option));
   }
 
-  mergeToTop() {
-    return this.boardMaster.getMap().turn().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y])).turn();
+  mergeToTop(option) {
+    return this.boardMaster.getMap().turn().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y],option)).turn();
   }
 
-  mergeToRight() {
-    return this.boardMaster.getMap().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y])).turn().turn();
+  mergeToRight(option) {
+    return this.boardMaster.getMap().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y],option)).turn().turn();
   }
 
-  mergeToBottom() {
-    return this.boardMaster.getMap().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y])).turn().turn().turn();
+  mergeToBottom(option) {
+    return this.boardMaster.getMap().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y],option)).turn().turn().turn();
   }
 }
