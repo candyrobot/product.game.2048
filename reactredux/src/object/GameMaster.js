@@ -81,11 +81,8 @@ export default class GameMaster {
   }
 
   mergeBy2048(dat, i, a, option = {}) {
-    if(this.iLoopCount >= this.iStopLoop)
-      return;
     for(var j=i+1; j<a.length; j++) {
       if(a[i].value===0 && a[j].value!==0) {
-        this.iLoopCount++;
         a[i].value=a[j].value;
         a[j].value=0;
         option.doWhenMerged && option.doWhenMerged({ x:a[j].x, y:a[j].y, toX:a[i].x, toY:a[i].y });
