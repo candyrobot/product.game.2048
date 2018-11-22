@@ -6,6 +6,7 @@ import $ from 'jquery';
 import 'jquery.transit';
 
 import GameMaster from './object/GameMaster';
+import AI from './object/AI';
 
 class App extends Component {
   constructor(props) {
@@ -25,6 +26,7 @@ class App extends Component {
         }
       }
     });
+    new AI(this.gm);
   }
   render() {
     return (

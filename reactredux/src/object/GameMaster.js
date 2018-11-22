@@ -9,6 +9,7 @@ export default class GameMaster {
     this.iLoopCount = 0;
     this.callback = options.callback || {};
     this.boardMaster = new BoardMaster([this.mapSize, this.mapSize]);
+    this.count = 0;
 
     document.addEventListener('keydown',(e)=> {
       e.keyCode===37&&this.play('left');
@@ -58,6 +59,9 @@ export default class GameMaster {
       console.log('game over');
       return;
     }
+
+    this.count++;
+    console.log(this.count);
   }
 
   dumpMap() {
@@ -115,19 +119,23 @@ export default class GameMaster {
     ).length===0;
   }
 
-  mergeToLeft(option) {
-    return this.boardMaster.getMap().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y],option));
+  mergeToLeft(option = {}) {
+    var map = this.boardMaster.getMap().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y],option));
+    return option.isReturnMapJustMerged ? map : map;
   }
 
-  mergeToTop(option) {
-    return this.boardMaster.getMap().turn().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y],option)).turn();
+  mergeToTop(option = {}) {
+    var map = this.boardMaster.getMap().turn().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y],option));
+    return option.isReturnMapJustMerged ? map : map.turn();
   }
 
-  mergeToRight(option) {
-    return this.boardMaster.getMap().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y],option)).turn().turn();
+  mergeToRight(option = {}) {
+    var map = this.boardMaster.getMap().turn().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y],option));
+    return option.isReturnMapJustMerged ? map : map.turn().turn();
   }
 
-  mergeToBottom(option) {
-    return this.boardMaster.getMap().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y],option)).turn().turn().turn();
+  mergeToBottom(option = {}) {
+    var map = this.boardMaster.getMap().turn().mapAll((v,p,map)=> this.mergeBy2048(v,p.x,map[p.y],option));
+    return option.isReturnMapJustMerged ? map : map.turn().turn().turn();
   }
 }
