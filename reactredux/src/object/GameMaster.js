@@ -9,35 +9,12 @@ export default class GameMaster {
     this.iLoopCount = 0;
     this.callback = options.callback || {};
     this.boardMaster = new BoardMaster([this.mapSize, this.mapSize]);
+
     document.addEventListener('keydown',(e)=> {
-      console.log('===========');
-      console.log(e.keyCode);
-      var map = [];
-      switch(e.keyCode){
-        case 37:
-          map = this.mergeToLeft({ doWhenMerged: this.callback.mergeBy2048 });
-          break;
-        case 38:
-          map = this.mergeToTop({ doWhenMerged: this.callback.mergeBy2048 });
-          break;
-        case 39:
-          map = this.mergeToRight({ doWhenMerged: this.callback.mergeBy2048 });
-          break;
-        case 40:
-          map = this.mergeToBottom({ doWhenMerged: this.callback.mergeBy2048 });
-          break;
-        default:
-          return;
-      }
-      if(this.isUnchangedTo(map))
-        return;
-      this.boardMaster.overrideMap(map);
-      this.addRandom();
-      console.log(1, this.boardMaster.getMap().stringify());
-      if(this.isNoMoreMerge()) {
-        console.log('game over');
-        return;
-      }
+      e.keyCode===37&&this.play('left');
+      e.keyCode===38&&this.play('top');
+      e.keyCode===39&&this.play('right');
+      e.keyCode===40&&this.play('bottom');
     });
 
     this.initializeGame();
@@ -53,6 +30,36 @@ export default class GameMaster {
     console.log(this.boardMaster.getMap().stringify());
   }
 
+  play(method) {
+    console.log('===========');
+    console.log(method);
+    var map = [];
+
+    if(method==='left')
+      map = this.mergeToLeft({ doWhenMerged: this.callback.mergeBy2048 });
+    else if(method==='top')
+      map = this.mergeToTop({ doWhenMerged: this.callback.mergeBy2048 });
+    else if(method==='right')
+      map = this.mergeToRight({ doWhenMerged: this.callback.mergeBy2048 });
+    else if(method==='bottom')
+      map = this.mergeToBottom({ doWhenMerged: this.callback.mergeBy2048 });
+    else
+      return;
+
+    if(this.isUnchangedTo(map))
+      return;
+
+    this.boardMaster.overrideMap(map);
+    this.addRandom();
+
+    console.log(this.boardMaster.getMap().stringify());
+
+    if(this.isNoMoreMerge()) {
+      console.log('game over');
+      return;
+    }
+  }
+
   dumpMap() {
     return this.boardMaster.getMap();
   }
@@ -63,7 +70,7 @@ export default class GameMaster {
       x: undefined,
       y: undefined,
     }]];
-    var positions = this.boardMaster.getMap().getPositions(position=> {
+    var positions = this.boardMaster.getMap().getPositions((_, position)=> {
       return !this.boardMaster.isOverBeyondMap(mapToAdd, position) &&
              !this.boardMaster.isAlreadyExist(mapToAdd, position);
     });
@@ -103,7 +110,7 @@ export default class GameMaster {
   }
 
   isUnchangedTo(map) {
-    return this.boardMaster.getMap().getPositions(position=>
+    return this.boardMaster.getMap().getPositions((_, position)=>
       map[position.y][position.x].value!==this.boardMaster.getMap()[position.y][position.x].value
     ).length===0;
   }
