@@ -10,43 +10,46 @@ export default class AI {
 
   getMethodBest() {
     var result = undefined;
-    var methods = ['left','top','right','bottom'];
-    var scores = [];
+    var score = {
+      left: undefined,
+      top: undefined,
+      right: undefined,
+      bottom: undefined,
+    };
 
-    if(this.gm.isUnchangedTo(this.gm.mergeToLeft()))
-      scores[0] = -1000000;
-    else
-      scores[0] = this.getMergableScore(this.gm.mergeToLeft({ isReturnMapJustMerged: true })) -
-                  this.getDangerScore(this.gm.mergeToLeft({ isReturnMapJustMerged: true }));
+    if(!this.gm.isUnchangedTo(this.gm.mergeToLeft()))
+      score.left =
+      this.getMergableScore(this.gm.mergeToLeft({ isReturnMapJustMerged: true })) -
+      this.getDangerScore(this.gm.mergeToLeft({ isReturnMapJustMerged: true }));
 
-    if(this.gm.isUnchangedTo(this.gm.mergeToTop()))
-      scores[1] = -1000000;
-    else
-      scores[1] = this.getMergableScore(this.gm.mergeToTop({ isReturnMapJustMerged: true })) -
-                  this.getDangerScore(this.gm.mergeToTop({ isReturnMapJustMerged: true }));
+    if(!this.gm.isUnchangedTo(this.gm.mergeToTop()))
+      score.top =
+      this.getMergableScore(this.gm.mergeToTop({ isReturnMapJustMerged: true })) -
+      this.getDangerScore(this.gm.mergeToTop({ isReturnMapJustMerged: true }));
 
-    if(this.gm.isUnchangedTo(this.gm.mergeToRight()))
-      scores[2] = -1000000;
-    else
-      scores[2] = this.getMergableScore(this.gm.mergeToRight({ isReturnMapJustMerged: true })) -
-                  this.getDangerScore(this.gm.mergeToRight({ isReturnMapJustMerged: true }));
+    if(!this.gm.isUnchangedTo(this.gm.mergeToRight()))
+      score.right =
+      this.getMergableScore(this.gm.mergeToRight({ isReturnMapJustMerged: true })) -
+      this.getDangerScore(this.gm.mergeToRight({ isReturnMapJustMerged: true }));
 
-    if(this.gm.isUnchangedTo(this.gm.mergeToBottom()))
-      scores[3] = -1000000;
-    else
-      scores[3] = this.getMergableScore(this.gm.mergeToBottom({ isReturnMapJustMerged: true })) -
-                  this.getDangerScore(this.gm.mergeToBottom({ isReturnMapJustMerged: true }));
+    if(!this.gm.isUnchangedTo(this.gm.mergeToBottom()))
+      score.bottom =
+      this.getMergableScore(this.gm.mergeToBottom({ isReturnMapJustMerged: true })) -
+      this.getDangerScore(this.gm.mergeToBottom({ isReturnMapJustMerged: true }));
 
-    console.log(scores);
+    console.log(score);
+
+    // INFO: remove propaty from Object which has undefined value.
+    Object.keys(score).forEach((key) => (score[key] == null) && delete score[key]);
 
     var keyHavingMax;
-    for(let i in scores) {
-      scores[i] === Math.max(...scores) && (keyHavingMax = i)
+    for(let key in score) {
+      score[key] === Math.max(...Object.values(score)) && (keyHavingMax = key)
     }
 
     console.log('key', keyHavingMax);
 
-    return methods[keyHavingMax];
+    return keyHavingMax;
   }
 
   getDangerScore(map) {
