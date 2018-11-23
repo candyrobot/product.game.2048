@@ -5,7 +5,7 @@ export default class AI {
     var timer = setInterval(()=> {
       var method = this.getMethodBest();
       method === undefined ? clearInterval(timer) : this.gm.play(method);
-    }, 10);
+    }, 50);
   }
 
   getMethodBest() {
@@ -19,23 +19,31 @@ export default class AI {
 
     if(!this.gm.isUnchangedTo(this.gm.mergeToLeft()))
       score.left =
-      this.getMergableScore(this.gm.mergeToLeft({ isReturnMapJustMerged: true })) -
-      this.getDangerScore(this.gm.mergeToLeft({ isReturnMapJustMerged: true }));
+      this.getMergableScore(this.gm.mergeToLeft({ isReturnMapJustMerged: true }))
+       - this.getDangerScore(this.gm.mergeToLeft({ isReturnMapJustMerged: true }))
+      // - this.getDeadSpaceScore(this.gm.mergeToLeft({ isReturnMapJustMerged: true }))
+      ;
 
     if(!this.gm.isUnchangedTo(this.gm.mergeToTop()))
       score.top =
-      this.getMergableScore(this.gm.mergeToTop({ isReturnMapJustMerged: true })) -
-      this.getDangerScore(this.gm.mergeToTop({ isReturnMapJustMerged: true }));
+      this.getMergableScore(this.gm.mergeToTop({ isReturnMapJustMerged: true }))
+       - this.getDangerScore(this.gm.mergeToTop({ isReturnMapJustMerged: true }))
+      // - this.getDeadSpaceScore(this.gm.mergeToTop({ isReturnMapJustMerged: true }))
+      ;
 
     if(!this.gm.isUnchangedTo(this.gm.mergeToRight()))
       score.right =
-      this.getMergableScore(this.gm.mergeToRight({ isReturnMapJustMerged: true })) -
-      this.getDangerScore(this.gm.mergeToRight({ isReturnMapJustMerged: true }));
+      this.getMergableScore(this.gm.mergeToRight({ isReturnMapJustMerged: true }))
+       - this.getDangerScore(this.gm.mergeToRight({ isReturnMapJustMerged: true }))
+      // - this.getDeadSpaceScore(this.gm.mergeToRight({ isReturnMapJustMerged: true }))
+      ;
 
     if(!this.gm.isUnchangedTo(this.gm.mergeToBottom()))
       score.bottom =
-      this.getMergableScore(this.gm.mergeToBottom({ isReturnMapJustMerged: true })) -
-      this.getDangerScore(this.gm.mergeToBottom({ isReturnMapJustMerged: true }));
+      this.getMergableScore(this.gm.mergeToBottom({ isReturnMapJustMerged: true }))
+       - this.getDangerScore(this.gm.mergeToBottom({ isReturnMapJustMerged: true }))
+      // - this.getDeadSpaceScore(this.gm.mergeToBottom({ isReturnMapJustMerged: true }))
+      ;
 
     console.log(score);
 
@@ -59,7 +67,8 @@ export default class AI {
       a.forEach((v, x)=> {
         if(a[x+1]===undefined)
           return;
-        score = score + (a[x].value < a[x+1].value ? 80 : 0);
+        if(a[x].value < a[x+1].value)
+          score = score + 1;
       });
     });
     // INFO: vertical check.
@@ -73,10 +82,20 @@ export default class AI {
     return score;
   }
 
+  getDeadSpaceScore(map) {
+    var score = 0;
+    map.forEach((a, y)=> {
+      if(a[a.length-1].value===0 && a.filter((dat)=> dat.value !== 0 ).length >= 3)
+        score = score + 8;
+    });
+    return score;
+  }
+
   getMergableScore(map, option = {}) {
     var score = 0;
     option.doWhenMerged = function() {
-      score++;
+      score = score + 4;
+      console.log('can');
     };
     map.mapAll((v,p,map)=> this.gm.mergeBy2048(v,p.x,map[p.y],option));
     // map.forEach((a, y)=> {
