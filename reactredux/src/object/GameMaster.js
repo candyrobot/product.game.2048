@@ -37,13 +37,13 @@ export default class GameMaster {
     var map = [];
 
     if(method==='left')
-      map = this.mergeToLeft({ doWhenMerged: this.callback.mergeBy2048 });
+      map = this.mergeToLeft({ doWhenMoved: this.callback.doWhenMoved });
     else if(method==='top')
-      map = this.mergeToTop({ doWhenMerged: this.callback.mergeBy2048 });
+      map = this.mergeToTop({ doWhenMoved: this.callback.doWhenMoved });
     else if(method==='right')
-      map = this.mergeToRight({ doWhenMerged: this.callback.mergeBy2048 });
+      map = this.mergeToRight({ doWhenMoved: this.callback.doWhenMoved });
     else if(method==='bottom')
-      map = this.mergeToBottom({ doWhenMerged: this.callback.mergeBy2048 });
+      map = this.mergeToBottom({ doWhenMoved: this.callback.doWhenMoved });
     else
       return;
 
@@ -96,14 +96,15 @@ export default class GameMaster {
       if(a[i].value===0 && a[j].value!==0) {
         a[i].value=a[j].value;
         a[j].value=0;
-        option.doWhenMerged && option.doWhenMerged({ x:a[j].x, y:a[j].y, toX:a[i].x, toY:a[i].y });
+        option.doWhenMoved && option.doWhenMoved({ x:a[j].x, y:a[j].y, toX:a[i].x, toY:a[i].y });
         a[i].value=this.mergeBy2048(a[i],i,a,option).value;
         return a[i];
       }
       if(a[i].value>0 && a[i].value===a[j].value) {
         a[i].value=a[i].value+a[j].value;
         a[j].value=0;
-        option.doWhenMerged && option.doWhenMerged({ x:a[j].x, y:a[j].y, toX:a[i].x, toY:a[i].y });
+        option.doWhenMoved && option.doWhenMoved({ x:a[j].x, y:a[j].y, toX:a[i].x, toY:a[i].y });
+        option.doWhenMerged && option.doWhenMerged();
         return a[i];
       }
       if(a[i].value>0 && a[j].value>0) {

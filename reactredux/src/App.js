@@ -13,7 +13,7 @@ class App extends Component {
     super(props);
     this.gm = new GameMaster({
       callback: {
-        mergeBy2048: (dat)=> {
+        doWhenMoved: (dat)=> {
           var w = $('table td').outerWidth(true);
           var $el = $(`table [data-y="${dat.y}"] [data-x="${dat.x}"] div`)
             .stop(1,1)

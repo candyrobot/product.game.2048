@@ -5,7 +5,7 @@ export default class AI {
     var timer = setInterval(()=> {
       var method = this.getMethodBest();
       method === undefined ? clearInterval(timer) : this.gm.play(method);
-    }, 100);
+    }, 10);
   }
 
   getMethodBest() {
@@ -59,7 +59,7 @@ export default class AI {
       a.forEach((v, x)=> {
         if(a[x+1]===undefined)
           return;
-        score = score + (a[x].value < a[x+1].value ? 1 : 0);
+        score = score + (a[x].value < a[x+1].value ? 80 : 0);
       });
     });
     // INFO: vertical check.
@@ -73,30 +73,23 @@ export default class AI {
     return score;
   }
 
-  getMergableScore(map) {
+  getMergableScore(map, option = {}) {
     var score = 0;
-    map.forEach((a, y)=> {
-      a.forEach((v, x)=> {
-        if(a[x+1]===undefined)
-          return;
-        score = score + (a[x].value === a[x+1].value ? 1 : 0);
-      });
-    });
+    option.doWhenMerged = function() {
+      score++;
+    };
+    map.mapAll((v,p,map)=> this.gm.mergeBy2048(v,p.x,map[p.y],option));
+    // map.forEach((a, y)=> {
+    //   a.forEach((v, x)=> {
+    //     if(a[x+1]===undefined)
+    //       return;
+    //     score = score + (a[x].value === a[x+1].value ? 1 : 0);
+    //   });
+    // });
     return score;
   }
+
 }
 
 // - reduce
 // - reduceRight
-
-// INFO: 以下はどちらも score: 2だが、前者のほうがdangerではない
-
-// getDangerScore([
-//   2,3
-//   2,3
-// ])
-
-// getDangerScore([
-//   2,3
-//   3,3
-// ])
