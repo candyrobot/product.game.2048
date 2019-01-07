@@ -36,5 +36,23 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+
+
+    <!-- INFO: 通信先: nonstop-vr -->
+    <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyBJcu20_YZ0b4N8wgRtuvlSoP3yPi7cMMs",
+        authDomain: "nonstop-vr.firebaseapp.com",
+        databaseURL: "https://nonstop-vr.firebaseio.com",
+        projectId: "nonstop-vr",
+        storageBucket: "nonstop-vr.appspot.com",
+        messagingSenderId: "319965006170"
+      };
+      firebase.initializeApp(config);
+    </script>
+
+
   </body>
 </html>
