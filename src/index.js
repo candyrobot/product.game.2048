@@ -4,7 +4,14 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+import 'candyrobot.javascript.package.lib';
 import Buffer from './object/Buffer.js'
+
+// - lv: ゲーム中の番号になる（value,numberは予約語）
+// - area: 2次元, space: 3次元
+// ## 絵文字
+// - http://punchdrunker.github.io/iOSEmoji/table_html/ios6/
+// - https://lets-emoji.com/ios11-emoji/
 
 class GameBoard extends Buffer {
   constructor(a, b) {
@@ -19,30 +26,72 @@ class GameBoard extends Buffer {
   }
 }
 
-class Particle {
-  constructor(value) {
-    this.value = value;
-  }
-  val(value) {
-    return value ? (this.value = value) : this.value;
-  }
-}
-
-
-//
-
+// class Particle {
+//   constructor(value) {
+//     this.value = value;
+//   }
+//   val(value) {
+//     return value ? (this.value = value) : this.value;
+//   }
+// }
 
 const gameBoard = new GameBoard([4,4], undefined);
 
-// gameBoard.dump()[0][3] = 1
-// するとすべての4番目が1になる。なぜ、、！
+window.gameBoard = gameBoard;
 
-// gameBoard.find([3, 0]).value = new Particle(1);
+class Game {
+  constructor() {
+    // INFO: 要素の見つけ方と代入
+    gameBoard.dump()[Math.randRange(0,3)][Math.randRange(0,3)] = 1;
+    gameBoard.dump()[Math.randRange(0,3)][Math.randRange(0,3)] = 1;
 
-console.log(gameBoard.dump())
+    console.log(gameBoard.dump().stringify())
+  }
+}
+
+new Game();
 
 
-// gameBoard.add(o);
+
+
+
+
+// [2,1,0,1].do2048({
+//   // dat.index
+//   // dat.value
+//   move: (dat, destinationDat)=> {},
+//   grow: (dat)=> {
+
+//   }
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ReactDOM.render(<App />, document.getElementById('root'));

@@ -6,13 +6,16 @@ export default class Buffer {
   constructor(size, initialValue) {
     const len = size.length;
     for (let i=0; i<len; i++) {
-      initialValue = this.buffer(size.pop(), initialValue);
+      initialValue = this.buffer(size.pop(), initialValue).clone();
     }
     this.o = initialValue;
   }
 
   /**
    * initialValueの値でlengthの長さの配列を作る
+   * WARN:
+   *   Array(n)は empty === undefined は true だが、
+   *   map関数などを使うとemptyを飛ばしてしまう（undefinedは飛ばさない）。
    * @param  {int}
    * @param  {any} undefined
    * @return {Array}
