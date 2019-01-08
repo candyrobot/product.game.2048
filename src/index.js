@@ -4,8 +4,11 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-import 'candyrobot.javascript.package.lib';
-import Buffer from './object/Buffer.js'
+import Space from './object/Space'
+// TODO: ↓
+import { 
+  Array
+} from 'candyrobot.javascript.package.lib';
 
 // - lv: ゲーム中の番号になる（value,numberは予約語）
 // - area: 2次元, space: 3次元
@@ -13,29 +16,7 @@ import Buffer from './object/Buffer.js'
 // - http://punchdrunker.github.io/iOSEmoji/table_html/ios6/
 // - https://lets-emoji.com/ios11-emoji/
 
-class GameBoard extends Buffer {
-  constructor(a, b) {
-    super(a, b);
-  }
-
-  /**
-   * @param  {Array}
-   */
-  find(position) {
-    return this.o[position[1]][position[0]];
-  }
-}
-
-// class Particle {
-//   constructor(value) {
-//     this.value = value;
-//   }
-//   val(value) {
-//     return value ? (this.value = value) : this.value;
-//   }
-// }
-
-const gameBoard = new GameBoard([4,4], undefined);
+const gameBoard = new Space([4,4], null);
 
 window.gameBoard = gameBoard;
 
@@ -44,6 +25,9 @@ class Game {
     // INFO: 要素の見つけ方と代入
     gameBoard.dump()[Math.randRange(0,3)][Math.randRange(0,3)] = 1;
     gameBoard.dump()[Math.randRange(0,3)][Math.randRange(0,3)] = 1;
+
+    const v = gameBoard.filter((dat)=> dat.value === null);
+    console.log(3, v);
 
     console.log(gameBoard.dump().stringify())
   }

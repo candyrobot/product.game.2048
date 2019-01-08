@@ -1,4 +1,4 @@
-export default class Buffer {
+export default class Space {
   /**
    * @param  {Array} - 二次元なら[2,3] 三次元なら[4,4,4]のように
    * @param  {any} undefined - 初期化したい値
@@ -29,5 +29,28 @@ export default class Buffer {
 
   dump() {
     return this.o;
+  }
+
+  filter(cond) {
+    return this.o.reduce((p, a, y)=> {
+      a.forEach((value, x)=> {
+        const dat = { x, y, value };
+        cond(dat) && p.push(dat);
+      });
+      return p;
+    }, []);
+  }
+
+  /**
+   * INFO: 3次元以降に対応していない。したい。
+   * @param  {[type]}
+   * @return {[type]}
+   */
+  map(fn) {
+    return this.o.map((a, y)=> {
+      return a.map((value, x)=> {
+        return fn({ x, y, value }, this);
+      });
+    });
   }
 }
