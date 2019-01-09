@@ -6,7 +6,7 @@ import * as serviceWorker from './serviceWorker';
 
 import Space from './object/Space'
 // TODO: ↓
-import { 
+import {
   Array
 } from 'candyrobot.javascript.package.lib';
 
@@ -20,34 +20,70 @@ const gameBoard = new Space([4,4], null);
 
 window.gameBoard = gameBoard;
 
-class Game {
+// [1,0,1,1]
+closest(0) // null
+closest(1) // null
+closest(2) // 0
+closest(3) // 2
+
+
+Array.prototype.do2048 = function(opt) {
+  return this.map((v, i)=> {
+    if (i === 0 || !v)
+      return v;
+
+    if (closest(i) !== null && this[closest(i)] === v) {
+      move();
+      grow();
+    }
+
+    // if (this[i-1])
+
+  });
+};
+
+new class Game {
   constructor() {
+    document.addEventListener('keydown', (e)=> {
+      e.keyCode===37&&this.play('left');
+      // e.keyCode===38&&this.play('top');
+      // e.keyCode===39&&this.play('right');
+      // e.keyCode===40&&this.play('bottom');
+
+      console.log(gameBoard.dump().stringify());
+    });
+
+    this.addRandomly();
+    this.addRandomly();
+  }
+
+  play() {
+    gameBoard.dump() = gameBoard.dump().map((a, y)=> {
+      return a.do2048({
+        // dat.index
+        // dat.value
+        move: (dat, destinationDat)=> {},
+        grow: (dat)=> {
+
+        }
+      });
+    });
+  }
+
+  addRandomly() {
+    const a = gameBoard.filter((dat)=> dat.value === null);
+    const i = Math.randRange(0,a.length-1);
     // INFO: 要素の見つけ方と代入
-    gameBoard.dump()[Math.randRange(0,3)][Math.randRange(0,3)] = 1;
-    gameBoard.dump()[Math.randRange(0,3)][Math.randRange(0,3)] = 1;
-
-    const v = gameBoard.filter((dat)=> dat.value === null);
-    console.log(3, v);
-
-    console.log(gameBoard.dump().stringify())
+    gameBoard.dump()[a[i].y][a[i].x] = 1;
   }
 }
 
-new Game();
 
 
 
 
 
-
-// [2,1,0,1].do2048({
-//   // dat.index
-//   // dat.value
-//   move: (dat, destinationDat)=> {},
-//   grow: (dat)=> {
-
-//   }
-// });
+// [2,1,0,1]
 
 
 
