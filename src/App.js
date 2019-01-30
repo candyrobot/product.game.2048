@@ -26,7 +26,7 @@ class App extends Component {
         }
       }
     });
-    new AI(this.gm);
+    // new AI(this.gm);
   }
   render() {
     return (
