@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import Helmet from 'react-helmet';
 import GameBoard from './component/GameBoard';
-import PersistentDrawerRight from './component/PersistentDrawerRight';
 import logo from './logo.svg';
 import './App.css';
 import $ from 'jquery';
 import 'jquery.transit';
-import CatchSwipe2 from './component/CatchSwipe';
+import CatchSwipe from './component/CatchSwipe'
+
 
 import GameMaster from './object/GameMaster';
 import AI from './object/AI';
@@ -29,19 +28,28 @@ class App extends Component {
         }
       }
     });
-    {/*new AI(this.gm);*/}
+    new AI(this.gm);
   }
   render() {
     return (
       <div className="App">
-        <Helmet>
-          <style>{'body { background-color: black; }'}</style>
-        </Helmet>
-        {/*<PersistentDrawerRight />
-        */}
-        <CatchSwipe2>
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>
+            Edit <code>src/App.js</code> and save to reload.
+          </p>
+          <a
+            className="App-link"
+            href="https://reactjs.org"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Learn React
+          </a>
+        </header>
+        <CatchSwipe>
           <GameBoard map={this.gm.dumpMap()} />
-        </CatchSwipe2>
+        </CatchSwipe>
       </div>
     );
   }
