@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import GameBoard from './component/GameBoard';
-import ButtonAppBar from './component/ButtonAppBar.js';
+import PersistentDrawerRight from './component/PersistentDrawerRight';
 import logo from './logo.svg';
 import './App.css';
 import $ from 'jquery';
 import 'jquery.transit';
+import CatchSwipe2 from './component/CatchSwipe';
 
 import GameMaster from './object/GameMaster';
 import AI from './object/AI';
@@ -36,8 +37,11 @@ class App extends Component {
         <Helmet>
           <style>{'body { background-color: black; }'}</style>
         </Helmet>
-        <ButtonAppBar/>
-        <GameBoard map={this.gm.dumpMap()} />
+        {/*<PersistentDrawerRight />
+        */}
+        <CatchSwipe2>
+          <GameBoard map={this.gm.dumpMap()} />
+        </CatchSwipe2>
       </div>
     );
   }
