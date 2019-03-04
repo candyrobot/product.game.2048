@@ -4,9 +4,22 @@ import logo from './logo.svg';
 import './App.css';
 import $ from 'jquery';
 import 'jquery.transit';
-
 import GameMaster from './object/GameMaster';
 import AI from './object/AI';
+
+// - フリックで操作（斜めもできるような
+// - ログインシステム
+// - 保存と再開
+// - 拡散
+// - やり方説明（pakuru!)
+// ここまで
+// - アイテムの管理
+// - 戻す
+// - 壊す
+// - 1,2を消す
+// - 成長
+// - ショップ
+// - ログインボーナス
 
 class App extends Component {
   constructor(props) {
@@ -26,7 +39,7 @@ class App extends Component {
         }
       }
     });
-    new AI(this.gm);
+    // new AI(this.gm);
   }
   render() {
     return (

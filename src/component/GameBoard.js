@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './GameBoard.css';
+import Emoji from '../object/Emoji';
 // import $ from 'jquery';
 
 class GameBoard extends Component {
@@ -12,7 +13,7 @@ class GameBoard extends Component {
             {this.props.map.map((a, y)=> {
               return <tr key={y} data-y={y}>{a.map((dat, x)=> {
                 return <td key={x} data-x={x}>
-                  <div>{dat.value||''}</div>
+                  <div>{dat.value ? Emoji.html(dat.value) : ''}</div>
                 </td>
               })}</tr>
             })}
