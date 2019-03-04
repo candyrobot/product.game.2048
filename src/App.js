@@ -4,9 +4,9 @@ import logo from './logo.svg';
 import './App.css';
 import $ from 'jquery';
 import 'jquery.transit';
-import CatchSwipe from './component/CatchSwipe'
 import GameMaster from './object/GameMaster';
 import AI from './object/AI';
+import Flicker from './object/Flicker';
 
 // - フリックで操作（斜めもできるような
 // - ログインシステム
@@ -40,6 +40,25 @@ class App extends Component {
         }
       }
     });
+
+    Flicker.onFlick((distances)=> {
+      if (Math.abs(distances.y) < 50 && distances.x < 0) {
+        this.gm.play('left');
+      }
+      else if (Math.abs(distances.y) < 50 && distances.x >= 0) {
+        this.gm.play('right');
+      }
+      else if (Math.abs(distances.x) < 50 && distances.y < 0) {
+        this.gm.play('top');
+      }
+      else if (Math.abs(distances.x) < 50 && distances.y >= 0) {
+        this.gm.play('bottom');
+      }
+      else {
+        alert('フリックした？');
+      }
+    });
+
     // new AI(this.gm);
   }
   render() {
@@ -59,9 +78,7 @@ class App extends Component {
             Learn React
           </a>
         </header>
-        <CatchSwipe>
-          <GameBoard map={this.gm.dumpMap()} />
-        </CatchSwipe>
+        <GameBoard map={this.gm.dumpMap()} />
       </div>
     );
   }
