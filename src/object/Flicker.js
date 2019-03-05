@@ -1,6 +1,7 @@
 import $ from 'jquery';
 
 // REF: http://www.hp-stylelink.com/news/2014/06/20140617.php
+// REF: https://qiita.com/shge/items/d2ae44621ce2eec183e6
 // INFO: ※preventDefault()を使用してブラウザのスクロールを停止する必要がある場合には，適宜スクロール処理を追加する必要があります．
 export default new class {
 
