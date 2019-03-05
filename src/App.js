@@ -45,18 +45,34 @@ class App extends Component {
   }
 
   onSwiping(e, deltaX, deltaY, absX, absY, velocity) {
-    if(deltaX > 0){
-      if(deltaY > 0){
-        alert('左上');
-      }else{
-        alert('左下');
-      }
-    }else{
-      if(deltaY > 0){
-        alert('右上');
-      }else{
-        alert('右下');
-      }
+    // if(deltaX > 0){
+    //   if(deltaY > 0){
+    //     alert('左上');
+    //   }else{
+    //     alert('左下');
+    //   }
+    // }else{
+    //   if(deltaY > 0){
+    //     alert('右上');
+    //   }else{
+    //     alert('右下');
+    //   }
+    // }
+
+    if (Math.abs(deltaY) < 50 && deltaX < 0) {
+      this.gm.play('left');
+    }
+    else if (Math.abs(deltaY) < 50 && deltaX >= 0) {
+      this.gm.play('right');
+    }
+    else if (Math.abs(deltaX) < 50 && deltaY < 0) {
+      this.gm.play('top');
+    }
+    else if (Math.abs(deltaX) < 50 && deltaY >= 0) {
+      this.gm.play('bottom');
+    }
+    else {
+      alert('フリックした？');
     }
   }
 
