@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import Swipeable from 'react-swipeable';
 import GameBoard from './component/GameBoard';
 import logo from './logo.svg';
 import './App.css';
 import $ from 'jquery';
 import 'jquery.transit';
-import CatchSwipe from './component/CatchSwipe'
+import SwipeCatcher from './component/SwipeCatcher'
 import GameMaster from './object/GameMaster';
 import AI from './object/AI';
 
@@ -42,6 +43,23 @@ class App extends Component {
     });
     // new AI(this.gm);
   }
+
+  onSwiping(e, deltaX, deltaY, absX, absY, velocity) {
+    if(deltaX > 0){
+      if(deltaY > 0){
+        alert('左上');
+      }else{
+        alert('左下');
+      }
+    }else{
+      if(deltaY > 0){
+        alert('右上');
+      }else{
+        alert('右下');
+      }
+    }
+  }
+
   render() {
     return (
       <div className="App">
@@ -59,9 +77,9 @@ class App extends Component {
             Learn React
           </a>
         </header>
-        <CatchSwipe>
+        <Swipeable onSwiping={this.onSwiping}>
           <GameBoard map={this.gm.dumpMap()} />
-        </CatchSwipe>
+        </Swipeable>
       </div>
     );
   }

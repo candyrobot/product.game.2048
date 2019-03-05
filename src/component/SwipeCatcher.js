@@ -1,7 +1,7 @@
 import React from 'react';
 import Swipeable from 'react-swipeable';
- 
-class CatchSwipe extends React.Component {
+
+class SwipeCatcher extends React.Component {
 
   swiping(e, deltaX, deltaY, absX, absY, velocity) {
     if(deltaX > 0){
@@ -20,7 +20,7 @@ class CatchSwipe extends React.Component {
 
     console.log("You're Swiping...", e, deltaX, deltaY, absX, absY, velocity)
   }
- 
+
   swipingUp(e, absX) {
     console.log("You're Swiping to the Up...", e, absX)
   }
@@ -36,11 +36,11 @@ class CatchSwipe extends React.Component {
   swipingRight(e, absX) {
     console.log("You're Swiping to the Right...", e, absX)
   }
- 
+
   swiped(e, deltaX, deltaY, isFlick, velocity) {
     console.log("You Swiped...", e, deltaX, deltaY, isFlick, velocity)
   }
- 
+
   swipedUp(e, deltaY, isFlick) {
     console.log("You Swiped Up...", e, deltaY, isFlick)
   }
@@ -56,7 +56,7 @@ class CatchSwipe extends React.Component {
   swipedRight(e, deltaY, isFlick) {
     console.log("You Swiped Right...", e, deltaY, isFlick)
   }
- 
+
   render() {
     return (
       <Swipeable
