@@ -5,7 +5,6 @@ import logo from './logo.svg';
 import './App.css';
 import $ from 'jquery';
 import 'jquery.transit';
-import SwipeCatcher from './component/SwipeCatcher'
 import GameMaster from './object/GameMaster';
 import AI from './object/AI';
 
