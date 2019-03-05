@@ -57,22 +57,6 @@ class App extends Component {
     //     alert('右下');
     //   }
     // }
-
-    if (Math.abs(deltaY) < 50 && deltaX < 0) {
-      this.gm.play('left');
-    }
-    else if (Math.abs(deltaY) < 50 && deltaX >= 0) {
-      this.gm.play('right');
-    }
-    else if (Math.abs(deltaX) < 50 && deltaY < 0) {
-      this.gm.play('top');
-    }
-    else if (Math.abs(deltaX) < 50 && deltaY >= 0) {
-      this.gm.play('bottom');
-    }
-    else {
-      alert('フリックした？');
-    }
   }
 
   render() {
@@ -92,7 +76,12 @@ class App extends Component {
             Learn React
           </a>
         </header>
-        <Swipeable onSwiping={this.onSwiping}>
+        <Swipeable
+          onSwipedUp={()=> this.gm.play('top')}
+          onSwipedDown={()=> this.gm.play('bottom')}
+          onSwipedLeft={()=> this.gm.play('left')}
+          onSwipedRight={()=> this.gm.play('right')}
+        >
           <GameBoard map={this.gm.dumpMap()} />
         </Swipeable>
       </div>
