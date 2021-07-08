@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Swipeable from 'react-swipeable';
 import GameBoard from './component/GameBoard';
 import logo from './logo.svg';
 import './App.css';
@@ -41,6 +42,23 @@ class App extends Component {
     });
     // new AI(this.gm);
   }
+
+  onSwiping(e, deltaX, deltaY, absX, absY, velocity) {
+    // if(deltaX > 0){
+    //   if(deltaY > 0){
+    //     alert('左上');
+    //   }else{
+    //     alert('左下');
+    //   }
+    // }else{
+    //   if(deltaY > 0){
+    //     alert('右上');
+    //   }else{
+    //     alert('右下');
+    //   }
+    // }
+  }
+
   render() {
     return (
       <div className="App">
@@ -58,7 +76,14 @@ class App extends Component {
             Learn React
           </a>
         </header>
-        <GameBoard map={this.gm.dumpMap()} />
+        <Swipeable
+          onSwipedUp={()=> this.gm.play('top')}
+          onSwipedDown={()=> this.gm.play('bottom')}
+          onSwipedLeft={()=> this.gm.play('left')}
+          onSwipedRight={()=> this.gm.play('right')}
+        >
+          <GameBoard map={this.gm.dumpMap()} />
+        </Swipeable>
       </div>
     );
   }
